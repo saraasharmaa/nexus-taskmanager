@@ -1,0 +1,358 @@
+// NexusHQ Team Task Manager — Prisma Schema
+// Production-ready with full relational integrity
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Role {
+  ADMIN
+  PROJECT_MANAGER
+  MEMBER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  ARCHIVED
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_COMPLETED
+  TASK_OVERDUE
+  DEADLINE_WARNING
+  COMMENT_ADDED
+  MENTION
+  PROJECT_UPDATE
+  STATUS_CHANGE
+}
+
+enum ActivityType {
+  TASK_CREATED
+  TASK_UPDATED
+  TASK_COMPLETED
+  TASK_ASSIGNED
+  TASK_COMMENTED
+  PROJECT_CREATED
+  PROJECT_UPDATED
+  MEMBER_JOINED
+  MEMBER_LEFT
+  STATUS_CHANGED
+  ATTACHMENT_ADDED
+}
+
+// ============================================================
+// MODELS
+// ============================================================
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String
+  passwordHash  String
+  role          Role     @default(MEMBER)
+  avatarUrl     String?
+  avatarColor   String   @default("#4f7bef")
+  title         String?
+  department    String?
+  isActive      Boolean  @default(true)
+  lastActiveAt  DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  ownedProjects     Project[]       @relation("ProjectOwner")
+  managedProjects   Project[]       @relation("ProjectManager")
+  teamMemberships   TeamMember[]
+  assignedTasks     Task[]          @relation("TaskAssignee")
+  createdTasks      Task[]          @relation("TaskCreator")
+  comments          Comment[]
+  attachments       Attachment[]
+  notifications     Notification[]
+  activities        ActivityLog[]
+  auditLogs         AuditLog[]
+  refreshTokens     RefreshToken[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String   @default("#4f7bef")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members  TeamMember[]
+  projects Project[]
+
+  @@index([name])
+}
+
+model TeamMember {
+  id       String   @id @default(cuid())
+  userId   String
+  teamId   String
+  joinedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+  @@index([teamId])
+  @@index([userId])
+}
+
+model Project {
+  id            String        @id @default(cuid())
+  name          String
+  description   String?
+  status        ProjectStatus @default(PLANNING)
+  priority      Priority      @default(MEDIUM)
+  healthScore   Int           @default(100)
+  startDate     DateTime?
+  deadline      DateTime?
+  isArchived    Boolean       @default(false)
+  ownerId       String
+  managerId     String?
+  teamId        String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  owner      User         @relation("ProjectOwner", fields: [ownerId], references: [id])
+  manager    User?        @relation("ProjectManager", fields: [managerId], references: [id])
+  team       Team?        @relation(fields: [teamId], references: [id])
+  tasks      Task[]
+  milestones Milestone[]
+  activities ActivityLog[]
+
+  @@index([status])
+  @@index([ownerId])
+  @@index([teamId])
+  @@index([deadline])
+}
+
+model Milestone {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime
+  isCompleted Boolean   @default(false)
+  projectId   String
+  createdAt   DateTime  @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks   Task[]
+
+  @@index([projectId])
+}
+
+model Task {
+  id              String     @id @default(cuid())
+  title           String
+  description     String?
+  status          TaskStatus @default(TODO)
+  priority        Priority   @default(MEDIUM)
+  estimatedHours  Float?
+  actualHours     Float?
+  dueDate         DateTime?
+  completedAt     DateTime?
+  isArchived      Boolean    @default(false)
+  sortOrder       Int        @default(0)
+
+  // Relations FKs
+  projectId   String
+  assigneeId  String?
+  creatorId   String
+  milestoneId String?
+  parentId    String?
+
+  // Relations
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee    User?       @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  creator     User        @relation("TaskCreator", fields: [creatorId], references: [id])
+  milestone   Milestone?  @relation(fields: [milestoneId], references: [id])
+  parent      Task?       @relation("TaskDependency", fields: [parentId], references: [id])
+  subtasks    Task[]      @relation("TaskDependency")
+  tags        TaskTag[]
+  comments    Comment[]
+  attachments Attachment[]
+  activities  ActivityLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@index([status])
+  @@index([priority])
+  @@index([dueDate])
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  color String @default("#4f7bef")
+
+  tasks TaskTag[]
+
+  @@index([name])
+}
+
+model TaskTag {
+  taskId String
+  tagId  String
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, tagId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  taskId    String
+  authorId  String
+  isEdited  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id])
+
+  @@index([taskId])
+  @@index([authorId])
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  filename   String
+  fileUrl    String
+  fileSize   Int
+  mimeType   String
+  taskId     String
+  uploadedBy String
+  createdAt  DateTime @default(now())
+
+  task     Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  uploader User @relation(fields: [uploadedBy], references: [id])
+
+  @@index([taskId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  userId    String
+  linkUrl   String?
+  metadata  Json?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+}
+
+model ActivityLog {
+  id         String       @id @default(cuid())
+  type       ActivityType
+  action     String
+  userId     String
+  projectId  String?
+  taskId     String?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime     @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id])
+  task    Task?    @relation(fields: [taskId], references: [id])
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([taskId])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  entity     String
+  entityId   String
+  action     String
+  oldValues  Json?
+  newValues  Json?
+  userId     String
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AnalyticsSnapshot {
+  id              String   @id @default(cuid())
+  date            DateTime @db.Date
+  totalUsers      Int
+  activeUsers     Int
+  totalProjects   Int
+  activeProjects  Int
+  totalTasks      Int
+  completedTasks  Int
+  overdueTasks    Int
+  avgHealthScore  Float
+  teamUtilization Float
+  createdAt       DateTime @default(now())
+
+  @@unique([date])
+  @@index([date])
+}
