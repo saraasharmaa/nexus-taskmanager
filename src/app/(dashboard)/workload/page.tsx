@@ -30,7 +30,11 @@ export default function WorkloadPage() {
 
       {isLoading ? (
         <div className="nexus-card animate-pulse h-64" />
-      ) : (
+      ) : workload.length === 0 ? (
+          <div className="nexus-card h-48 flex items-center justify-center text-sm text-muted-foreground">
+            Assign tasks to team members to generate workload analytics.
+          </div>
+        ) : (
         <div className="nexus-card">
           <h2 className="text-sm font-semibold mb-4">Capacity Utilization</h2>
           <div className="space-y-4">

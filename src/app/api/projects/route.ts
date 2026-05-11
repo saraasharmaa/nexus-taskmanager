@@ -34,7 +34,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const project = await prisma.project.create({
-      data: body,
+      data: {
+        name: body.name,
+        description: body.description || null,
+        priority: body.priority || "MEDIUM",
+        deadline: body.deadline ? new Date(body.deadline) : null,
+        owner: {
+          connect: {
+            id: "cmp019e6t000013h0uny6p1cj",
+          },
+        },
+      },
     });
 
     return NextResponse.json({

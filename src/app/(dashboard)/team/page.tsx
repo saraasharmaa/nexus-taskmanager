@@ -51,7 +51,7 @@ export default function TeamPage() {
     const assignedTasks = tasks.filter((task) => task.assigneeId === userId);
 
     const completed = assignedTasks.filter(
-      (task) => task.status === 'DONE'
+      (task) => task.status === 'COMPLETED'
     ).length;
 
     const inProgress = assignedTasks.filter(

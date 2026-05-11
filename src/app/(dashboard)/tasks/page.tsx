@@ -65,7 +65,7 @@ export default function TasksPage() {
         title: form.title,
         description: form.description || undefined,
         projectId: form.projectId,
-        assigneeId: form.assigneeId || undefined,
+        assignedToId: form.assigneeId || undefined,
         priority: form.priority as 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL',
         status: form.status as 'TODO' | 'IN_PROGRESS' | 'REVIEW' | 'COMPLETED',
         dueDate: form.dueDate ? new Date(form.dueDate).toISOString() : undefined,

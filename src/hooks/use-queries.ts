@@ -28,7 +28,7 @@ export const QK = {
 export function useDashboard() {
   return useQuery({
     queryKey: QK.dashboard,
-    queryFn: () => api.getDashboard().then((r) => r.data),
+    queryFn: () => api.getDashboard().then((r) => r.data.data),
     staleTime: 60 * 1000, // 1 minute
     refetchInterval: 5 * 60 * 1000, // 5 minutes
   });

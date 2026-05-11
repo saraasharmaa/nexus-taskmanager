@@ -60,7 +60,12 @@ export default function AnalyticsPage() {
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-green-500/70 inline-block" />Completed</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-blue-500/70 inline-block" />Created</span>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
+          {(charts?.monthlyBreakdown?.length ?? 0) === 0 ? (
+            <div className="h-[200px] flex items-center justify-center text-sm text-muted-foreground">
+              Create and complete tasks to generate analytics.
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height={200}>
             <BarChart data={charts?.monthlyBreakdown ?? []}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
@@ -70,6 +75,7 @@ export default function AnalyticsPage() {
               <Bar dataKey="created" fill="rgba(79,123,239,.65)" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+          )}
         </div>
 
         {/* Task status donut */}
@@ -77,7 +83,12 @@ export default function AnalyticsPage() {
           <h2 className="text-sm font-semibold mb-1">Task Distribution</h2>
           <p className="text-xs text-muted-foreground mb-4">Current status breakdown</p>
           <div className="flex items-center gap-6">
-            <ResponsiveContainer width={160} height={160}>
+            {(charts?.statusDistribution?.length ?? 0) === 0 ? (
+              <div className="h-[160px] flex items-center justify-center text-sm text-muted-foreground">
+                No task distribution data yet.
+              </div>
+            ) : (
+              <ResponsiveContainer width={160} height={160}>
               <PieChart>
                 <Pie data={charts?.statusDistribution ?? []} cx="50%" cy="50%" innerRadius={48} outerRadius={72} paddingAngle={3} dataKey="count">
                   {(charts?.statusDistribution ?? []).map((entry: { status: string }, i: number) => (
@@ -86,6 +97,7 @@ export default function AnalyticsPage() {
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
+            )}
             <div className="flex-1 space-y-2">
               {(charts?.statusDistribution ?? []).map((s: { status: string; count: number }, i: number) => (
                 <div key={i} className="flex items-center gap-2">

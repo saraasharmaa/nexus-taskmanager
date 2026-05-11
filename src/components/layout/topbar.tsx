@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 const PAGE_LABELS: Record<string, { title: string; subtitle: string }> = {
   '/dashboard': { title: 'Dashboard', subtitle: 'Workspace overview' },
   '/projects': { title: 'Projects', subtitle: '6 active projects' },
-  '/tasks': { title: 'My Tasks', subtitle: '7 tasks assigned to you' },
+  '/tasks': { title: 'My Tasks', subtitle: 'Manage your assigned tasks' },
   '/kanban': { title: 'Kanban Board', subtitle: 'Drag & drop task management' },
   '/calendar': { title: 'Calendar', subtitle: 'Schedule & deadline overview' },
   '/analytics': { title: 'Analytics', subtitle: 'Performance insights' },

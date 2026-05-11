@@ -137,28 +137,33 @@ export default function DashboardPage() {
         transition={{ delay: 0.3 }}
       >
         <AiInsightCard
-          title="Team productivity trending up 23% this sprint"
+          title="Workspace Insights"
           insights={[
             {
-              label: 'Top Performer',
-              value: 'Jordan Blake',
-              sub: '9 tasks this week',
+              label: 'Projects',
+              value: `${overview?.totalProjects ?? 0} Active`,
+              sub: `${overview?.activeProjects ?? 0} currently running`,
+              color: 'text-blue-400',
+            },
+            {
+              label: 'Tasks Completed',
+              value: `${overview?.completedTasks ?? 0}`,
+              sub: `${overview?.inProgressTasks ?? 0} still in progress`,
               color: 'text-green-400',
             },
             {
-              label: 'At Risk',
-              value: 'Mobile App Redesign',
-              sub: '18 days left, 55% incomplete',
-              color: 'text-red-400',
-            },
-            {
-              label: 'Recommendation',
-              value: 'Redistribute 3 tasks',
-              sub: 'Jordan → Nina & Ava',
-              color: 'text-amber-400',
+              label: 'Overdue Tasks',
+              value: `${overview?.overdueTasks ?? 0}`,
+              sub:
+                (overview?.overdueTasks ?? 0) > 0
+                  ? 'Needs attention'
+                  : 'No overdue work',
+              color:
+                (overview?.overdueTasks ?? 0) > 0
+                  ? 'text-red-400'
+                  : 'text-emerald-400',
             },
           ]}
-          detail="Jordan Blake is approaching overload capacity (95%). Consider redistributing 2–3 tasks to Nina Ross (25% utilized). Mobile App Redesign has a high-risk deadline in 18 days with only 45% completion."
         />
       </motion.div>
 
