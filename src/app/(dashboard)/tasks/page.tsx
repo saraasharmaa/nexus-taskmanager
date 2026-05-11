@@ -1,5 +1,5 @@
 'use client';
-
+import { useUIStore } from '@/store/ui.store';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Search, CheckSquare, Calendar, MessageSquare, Tag } from 'lucide-react';
@@ -31,10 +31,10 @@ interface Task {
 
 export default function TasksPage() {
   const { user } = useAuthStore();
+  const { activeModal, closeModal } = useUIStore();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('');
-  const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState({ title: '', description: '', projectId: '', assigneeId: '', priority: 'MEDIUM', status: 'TODO', dueDate: '', tags: '' });
   const [formError, setFormError] = useState('');
 
@@ -71,7 +71,7 @@ export default function TasksPage() {
         dueDate: form.dueDate ? new Date(form.dueDate).toISOString() : undefined,
         tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       });
-      setShowCreate(false);
+      closeModal();
       setForm({ title: '', description: '', projectId: '', assigneeId: '', priority: 'MEDIUM', status: 'TODO', dueDate: '', tags: '' });
       refetch();
     } catch (err: unknown) {
@@ -117,8 +117,8 @@ export default function TasksPage() {
       </div>
 
       {/* Create Task Modal */}
-      {showCreate && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowCreate(false)}>
+      {activeModal === 'createTask' && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => closeModal()}>
           <div className="bg-card border border-border rounded-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <h2 className="text-base font-semibold mb-4">Create Task</h2>
             <form onSubmit={handleCreate} className="space-y-4">
@@ -165,7 +165,7 @@ export default function TasksPage() {
                 <input value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} placeholder="frontend, bug, urgent" className="w-full bg-muted/50 border border-border rounded-lg px-3 py-2 text-sm outline-none focus:border-primary/60 transition-all" />
               </div>
               <div className="flex gap-3 pt-2">
-                <button type="button" onClick={() => setShowCreate(false)} className="flex-1 py-2 border border-border rounded-lg text-sm hover:bg-muted/50 transition-colors">Cancel</button>
+                <button type="button" onClick={() => closeModal()} className="flex-1 py-2 border border-border rounded-lg text-sm hover:bg-muted/50 transition-colors">Cancel</button>
                 <button type="submit" disabled={createTask.isPending} className="flex-1 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50">
                   {createTask.isPending ? 'Creating...' : 'Create Task'}
                 </button>
