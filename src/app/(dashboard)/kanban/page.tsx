@@ -31,7 +31,7 @@ export default function KanbanPage() {
   const updateTask = useUpdateTask();
   const [dragging, setDragging] = useState<string | null>(null);
 
-  const tasks: Task[] = data?.data?.data ?? [];
+  const tasks: Task[] = data?.data ?? [];
   const canUpdate = true; // All roles can see; members can update own tasks
 
   const getColumnTasks = (status: string) => tasks.filter(t => t.status === status);

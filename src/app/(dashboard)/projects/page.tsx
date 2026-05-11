@@ -34,7 +34,7 @@ export default function ProjectsPage() {
   const createProject = useCreateProject();
   const deleteProject = useDeleteProject();
 
-  const projects = data?.data?.data ?? [];
+  const projects = data?.data ?? [];
   const canCreate = user?.role === 'ADMIN' || user?.role === 'PROJECT_MANAGER';
 
   const handleCreate = async (e: React.FormEvent) => {

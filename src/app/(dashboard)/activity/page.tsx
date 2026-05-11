@@ -18,7 +18,7 @@ interface Activity {
 
 export default function ActivityPage() {
   const { data, isLoading } = useActivity({ limit: 50 });
-  const activities: Activity[] = data?.data?.data ?? [];
+  const activities: Activity[] = data?.data ?? [];
 
   return (
     <div className="p-6 max-w-3xl">
