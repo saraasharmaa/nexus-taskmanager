@@ -28,7 +28,7 @@ export const QK = {
 export function useDashboard() {
   return useQuery({
     queryKey: QK.dashboard,
-    queryFn: () => api.getDashboard().then((r) => r.data.data),
+    queryFn: () => api.getDashboard().then((r) => r.data),
     staleTime: 60 * 1000, // 1 minute
     refetchInterval: 5 * 60 * 1000, // 5 minutes
   });
@@ -38,7 +38,7 @@ export function useDashboard() {
 export function useProjects(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: QK.projects(params),
-    queryFn: () => api.getProjects(params).then((r) => r.data.data),
+    queryFn: () => api.getProjects(params).then((r) => r.data),
     staleTime: 30 * 1000,
   });
 }
@@ -46,7 +46,7 @@ export function useProjects(params?: Record<string, unknown>) {
 export function useProject(id: string, enabled = true) {
   return useQuery({
     queryKey: QK.project(id),
-    queryFn: () => api.getProject(id).then((r) => r.data.data),
+    queryFn: () => api.getProject(id).then((r) => r.data),
     enabled: !!id && enabled,
     staleTime: 30 * 1000,
   });
@@ -58,7 +58,7 @@ export function useCreateProject() {
 
   return useMutation({
     mutationFn: (data: Partial<CreateProjectInput>) =>
-      api.createProject(data as Record<string, unknown>).then((r) => r.data.data as Project),
+      api.createProject(data as Record<string, unknown>).then((r) => r.data as Project),
     onSuccess: (project) => {
       qc.invalidateQueries({ queryKey: ['projects'] });
       qc.invalidateQueries({ queryKey: QK.dashboard });
@@ -76,7 +76,7 @@ export function useUpdateProject() {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
-      api.updateProject(id, data).then((r) => r.data.data as Project),
+      api.updateProject(id, data).then((r) => r.data as Project),
     onSuccess: (project) => {
       qc.invalidateQueries({ queryKey: QK.project(project.id) });
       qc.invalidateQueries({ queryKey: ['projects'] });
@@ -107,7 +107,7 @@ export function useDeleteProject() {
 export function useTasks(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: QK.tasks(params),
-    queryFn: () => api.getTasks(params).then((r) => r.data.data),
+    queryFn: () => api.getTasks(params).then((r) => r.data),
     staleTime: 15 * 1000,
   });
 }
@@ -115,7 +115,7 @@ export function useTasks(params?: Record<string, unknown>) {
 export function useTask(id: string) {
   return useQuery({
     queryKey: QK.task(id),
-    queryFn: () => api.getTask(id).then((r) => r.data.data as Task),
+    queryFn: () => api.getTask(id).then((r) => r.data as Task),
     enabled: !!id,
     staleTime: 15 * 1000,
   });
@@ -127,7 +127,7 @@ export function useCreateTask() {
 
   return useMutation({
     mutationFn: (data: Partial<CreateTaskInput>) =>
-      api.createTask(data as Record<string, unknown>).then((r) => r.data.data as Task),
+      api.createTask(data as Record<string, unknown>).then((r) => r.data as Task),
     onSuccess: (task) => {
       qc.invalidateQueries({ queryKey: ['tasks'] });
       qc.invalidateQueries({ queryKey: QK.project(task.projectId) });
@@ -146,7 +146,7 @@ export function useUpdateTask() {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<UpdateTaskInput> }) =>
-      api.updateTask(id, data as Record<string, unknown>).then((r) => r.data.data as Task),
+      api.updateTask(id, data as Record<string, unknown>).then((r) => r.data as Task),
     onSuccess: (task) => {
       qc.setQueryData(QK.task(task.id), task);
       qc.invalidateQueries({ queryKey: ['tasks'] });
@@ -162,7 +162,7 @@ export function useUpdateTaskStatus() {
 
   return useMutation({
     mutationFn: ({ id, status, sortOrder }: { id: string; status: string; sortOrder?: number }) =>
-      api.updateTaskStatus(id, status, sortOrder).then((r) => r.data.data as Task),
+      api.updateTaskStatus(id, status, sortOrder).then((r) => r.data as Task),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tasks'] });
       qc.invalidateQueries({ queryKey: QK.dashboard });
@@ -189,7 +189,7 @@ export function useDeleteTask() {
 export function useUsers(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: QK.users(params),
-    queryFn: () => api.getUsers(params).then((r) => r.data.data as { data: User[] }),
+    queryFn: () => api.getUsers(params).then((r) => r.data as { data: User[] }),
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -197,7 +197,7 @@ export function useUsers(params?: Record<string, unknown>) {
 export function useMe() {
   return useQuery({
     queryKey: ['me'],
-    queryFn: () => api.getMe().then((r) => r.data.data as User),
+    queryFn: () => api.getMe().then((r) => r.data as User),
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -206,7 +206,7 @@ export function useMe() {
 export function useNotifications(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: QK.notifications,
-    queryFn: () => api.getNotifications(params).then((r) => r.data.data),
+    queryFn: () => api.getNotifications(params).then((r) => r.data),
     staleTime: 30 * 1000,
     refetchInterval: 60 * 1000, // poll every minute
   });
@@ -224,7 +224,7 @@ export function useMarkAllRead() {
 export function useActivity(params?: Record<string, unknown>) {
   return useQuery({
     queryKey: QK.activity(params),
-    queryFn: () => api.getActivity(params).then((r) => r.data.data),
+    queryFn: () => api.getActivity(params).then((r) => r.data),
     staleTime: 30 * 1000,
     refetchInterval: 30 * 1000,
   });
@@ -234,7 +234,7 @@ export function useActivity(params?: Record<string, unknown>) {
 export function useTeams() {
   return useQuery({
     queryKey: QK.teams,
-    queryFn: () => api.getTeams().then((r) => r.data.data),
+    queryFn: () => api.getTeams().then((r) => r.data),
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -243,7 +243,7 @@ export function useTeams() {
 export function useWorkload() {
   return useQuery({
     queryKey: QK.workload,
-    queryFn: () => api.getWorkload().then((r) => r.data.data),
+    queryFn: () => api.getWorkload().then((r) => r.data),
     staleTime: 60 * 1000,
   });
 }
