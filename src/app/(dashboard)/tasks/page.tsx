@@ -52,7 +52,7 @@ export default function TasksPage() {
   const deleteTask = useDeleteTask();
 
   const tasks: Task[] = data?.data ?? [];
-  const projects = projectsData?.data ?? [];
+  const projects = projectsData?.data?.data ?? [];
   const members = usersData?.data ?? [];
 
   const handleCreate = async (e: React.FormEvent) => {
