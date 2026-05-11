@@ -1,272 +1,181 @@
-# ============================================================
-# NexusHQ Team Task Manager
-# Production-grade SaaS built with Next.js 15 + PostgreSQL
-# ============================================================
+# NexusHQ 🚀
 
-## 🚀 Tech Stack
+AI-powered team task management platform built with Next.js, Prisma, PostgreSQL, and Railway.
 
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js 15, TypeScript, Tailwind CSS, ShadCN UI |
-| State | Zustand, TanStack Query (React Query) |
-| Animation | Framer Motion |
-| Charts | Recharts |
-| Forms | React Hook Form + Zod |
-| Backend | Next.js API Routes, JWT Auth |
-| Database | PostgreSQL + Prisma ORM |
-| Deployment | Railway |
+NexusHQ helps teams manage projects, tasks, workload distribution, analytics, calendars, and collaboration through a modern full-stack dashboard experience.
 
 ---
 
-## 📁 Folder Structure
+## ✨ Features
 
-```
-nexus-taskmanager/
-├── prisma/
-│   ├── schema.prisma          # Full database schema
-│   └── seed.ts                # Sample data seeder
-├── src/
-│   ├── app/
-│   │   ├── (dashboard)/       # Protected dashboard routes
-│   │   │   ├── dashboard/     # Main dashboard
-│   │   │   ├── projects/      # Project management
-│   │   │   ├── tasks/         # Task list view
-│   │   │   ├── kanban/        # Drag-and-drop kanban
-│   │   │   ├── calendar/      # Calendar view
-│   │   │   ├── analytics/     # Analytics & charts
-│   │   │   ├── workload/      # Workload management
-│   │   │   ├── team/          # Team management
-│   │   │   ├── activity/      # Activity feed
-│   │   │   └── settings/      # Workspace settings
-│   │   ├── (auth)/            # Login/signup pages
-│   │   └── api/               # REST API routes
-│   │       ├── auth/          # JWT auth endpoints
-│   │       ├── projects/      # Project CRUD
-│   │       ├── tasks/         # Task CRUD
-│   │       ├── users/         # User management
-│   │       ├── notifications/ # Notifications
-│   │       ├── analytics/     # Dashboard analytics
-│   │       └── activity/      # Activity log
-│   ├── components/
-│   │   ├── layout/            # Sidebar, Topbar, NotifPanel
-│   │   ├── dashboard/         # Metric cards, charts
-│   │   ├── projects/          # Project cards, forms
-│   │   ├── tasks/             # Task cards, kanban
-│   │   ├── team/              # Member cards
-│   │   ├── providers/         # Query, Theme providers
-│   │   └── ui/                # Shared UI components
-│   ├── hooks/
-│   │   └── use-queries.ts     # TanStack Query hooks
-│   ├── lib/
-│   │   ├── prisma.ts          # DB client singleton
-│   │   ├── auth.ts            # JWT utilities
-│   │   ├── api-client.ts      # Axios client
-│   │   ├── api-utils.ts       # Response helpers
-│   │   └── validations.ts     # Zod schemas
-│   ├── store/
-│   │   ├── auth.store.ts      # Zustand auth state
-│   │   └── ui.store.ts        # Zustand UI state
-│   └── types/
-│       └── index.ts           # TypeScript interfaces
-├── .env.example               # Environment template
-├── next.config.js
-├── tailwind.config.ts
-└── tsconfig.json
-```
+- 🔐 JWT Authentication
+- 📋 Task Management
+- 📁 Project Management
+- 🧠 Analytics Dashboard
+- 📊 Workload Tracking
+- 🗓️ Calendar View
+- 🧩 Kanban Board
+- 👥 Team Members Dashboard
+- 🌙 Modern Dark UI
+- ⚡ Real-time Dashboard Experience
+- ☁️ Railway Deployment
+- 🗄️ PostgreSQL + Prisma ORM
 
 ---
 
-## 🛠 Local Development
+## 🛠️ Tech Stack
 
-### Prerequisites
-- Node.js 18+
-- PostgreSQL 14+
-- npm or yarn
+### Frontend
+- Next.js 15
+- React
+- TypeScript
+- TailwindCSS
+- Zustand
+- Shadcn UI
 
-### Setup
+### Backend
+- Prisma ORM
+- PostgreSQL
+- JWT Authentication
+- REST APIs
+
+### Deployment
+- Railway
+- GitHub
+
+---
+
+## 📂 Core Modules
+
+| Module       | Description                          |
+| ------------ | ------------------------------------ |
+| Dashboard    | Productivity overview and metrics    |
+| Tasks        | Task CRUD management                 |
+| Projects     | Project tracking and organization    |
+| Kanban       | Drag-and-drop workflow board         |
+| Calendar     | Deadline and task scheduling         |
+| Analytics    | Productivity and completion insights |
+| Workload     | Team utilization tracking            |
+| Team Members | Team collaboration overview          |
+
+---
+
+## ⚙️ Local Setup
+
+### 1. Clone Repository
 
 ```bash
-# 1. Clone and install
-git clone https://github.com/yourusername/nexus-taskmanager
+git clone YOUR_REPO_URL
 cd nexus-taskmanager
+```
+
+### 2. Install Dependencies
+
+```bash
 npm install
+```
 
-# 2. Configure environment
-cp .env.example .env
-# Fill in DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET
+### 3. Configure Environment Variables
 
-# 3. Setup database
-npm run db:push        # Create tables
-npm run db:seed        # Seed sample data
+Create a `.env` file in the root directory:
 
-# 4. Start development server
+```env
+DATABASE_URL=your_postgresql_url
+JWT_SECRET=your_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+### 4. Push Prisma Schema
+
+```bash
+npx prisma db push
+npx prisma generate
+```
+
+### 5. Run Application
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+---
 
-### Sample Login Credentials
+## ☁️ Railway Deployment
 
-| Role | Email | Password |
-|---|---|---|
-| Admin | alex.liu@nexushq.com | Password123 |
-| Project Manager | sarah.chen@nexushq.com | Password123 |
-| Member | marcus.webb@nexushq.com | Password123 |
+This project is deployed using Railway with PostgreSQL integration.
+
+**Deployment flow:**
+1. Push changes to GitHub
+2. Railway auto-deploys the latest commit
+3. Prisma syncs with the PostgreSQL database
 
 ---
 
-## 🚂 Railway Deployment
+## 📊 Analytics & Workload Notes
 
-### One-Click Deploy
+### Analytics Page
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template)
+If analytics appears empty initially, this is expected behavior when the database has very little activity data.
 
-### Manual Deployment
+Analytics depends on:
+- Completed tasks
+- Task history
+- Multiple task statuses
+- Productivity metrics
 
-```bash
-# 1. Install Railway CLI
-npm install -g @railway/cli
+**To populate analytics**, create 4–5 tasks with different priorities and statuses, then:
+- Mark some tasks as `DONE`
+- Mark others as `IN_PROGRESS`
 
-# 2. Login and init
-railway login
-railway init
-
-# 3. Add PostgreSQL
-railway add postgresql
-
-# 4. Set environment variables in Railway dashboard:
-#    DATABASE_URL        → auto-set by Railway PostgreSQL plugin
-#    JWT_SECRET          → generate: openssl rand -base64 64
-#    JWT_REFRESH_SECRET  → generate: openssl rand -base64 64
-#    NODE_ENV            → production
-#    NEXTAUTH_URL        → https://your-app.railway.app
-
-# 5. Deploy
-railway up
-```
-
-### Build & Start Commands
-
-```bash
-Build:  prisma generate && next build
-Start:  next start
-```
-
-### railway.toml
-
-```toml
-[build]
-builder = "NIXPACKS"
-buildCommand = "npm install && npm run build"
-
-[deploy]
-startCommand = "npm start"
-healthcheckPath = "/api/health"
-restartPolicyType = "ON_FAILURE"
-```
+The charts and productivity metrics will automatically populate.
 
 ---
 
-## 🔐 Security
+### Workload Page
 
-- ✅ JWT access tokens (15 min) + refresh tokens (7 days)
-- ✅ bcrypt password hashing (cost factor 12)
-- ✅ RBAC middleware (Admin / Project Manager / Member)
-- ✅ HTTP-only cookies for token storage
-- ✅ Zod input validation on all endpoints
-- ✅ Prisma parameterized queries (SQL injection prevention)
-- ✅ CORS configuration
-- ✅ Rate limiting (in-memory, Redis-ready)
-- ✅ Audit trail for all entity mutations
+Workload tracking depends on:
+- Assigned tasks
+- Due dates
+- Task counts
+- Team members
 
----
+If workload appears empty, it may be because:
+- Tasks have not yet been assigned
+- There is only one admin user
+- Insufficient task distribution exists
 
-## 📊 Features
-
-### Role-Based Access Control
-| Feature | Admin | PM | Member |
-|---|---|---|---|
-| Manage users | ✓ | — | — |
-| Create projects | ✓ | — | — |
-| Manage teams | ✓ | — | — |
-| View org analytics | ✓ | — | — |
-| Create/assign tasks | ✓ | ✓ | — |
-| Monitor performance | ✓ | ✓ | — |
-| Update task progress | ✓ | ✓ | ✓ |
-| Add comments | ✓ | ✓ | ✓ |
-| View assigned tasks | ✓ | ✓ | ✓ |
-
-### Analytics
-- Task completion velocity (8-week trend)
-- Team workload & capacity utilization
-- Project health scoring (composite algorithm)
-- Risk detection (overdue, deadline proximity)
-- AI-generated productivity insights
-- Priority & status distribution charts
+**To populate workload data**, create multiple users, multiple assigned tasks, and varied deadlines and statuses. This enables workload balancing calculations and utilization charts.
 
 ---
 
-## 🔌 API Documentation
+## 🧠 Current Architecture
 
-### Base URL
-```
-https://your-app.railway.app/api
-```
+The application follows a full-stack architecture:
 
-### Authentication
 ```
-POST /api/auth/login         # Login
-POST /api/auth/signup        # Register
-POST /api/auth/logout        # Logout
-POST /api/auth/refresh       # Refresh token
-```
-
-### Projects
-```
-GET    /api/projects          # List projects (paginated)
-POST   /api/projects          # Create project [Admin, PM]
-GET    /api/projects/:id      # Get project with tasks
-PUT    /api/projects/:id      # Update project [Admin, PM]
-DELETE /api/projects/:id      # Delete project [Admin]
-```
-
-### Tasks
-```
-GET    /api/tasks             # List tasks (filterable)
-POST   /api/tasks             # Create task [Admin, PM]
-GET    /api/tasks/:id         # Get task detail
-PUT    /api/tasks/:id         # Update task
-PATCH  /api/tasks/:id/status  # Update status only
-DELETE /api/tasks/:id         # Delete task [Admin, PM]
-```
-
-### Analytics
-```
-GET /api/analytics/dashboard   # Full dashboard data
-GET /api/analytics/productivity # Productivity metrics
-GET /api/analytics/workload    # Team workload data
-```
-
-### Notifications
-```
-GET   /api/notifications        # List notifications
-PATCH /api/notifications        # Mark all read
-PATCH /api/notifications/:id   # Mark one read
+Frontend (Next.js)
+    ↓
+API Routes
+    ↓
+Prisma ORM
+    ↓
+PostgreSQL Database
 ```
 
 ---
 
-## 🎨 Design System
+## 📌 Future Improvements
 
-Built on ShadCN UI + Tailwind with custom Nexus tokens:
-- **Font**: DM Sans (UI) + DM Mono (code)
-- **Dark mode**: First-class, system-aware
-- **Colors**: 9-ramp palette with semantic tokens
-- **Animations**: Framer Motion with staggered page reveals
-- **Icons**: Lucide React
+- [ ] Real-time WebSockets
+- [ ] Notifications System
+- [ ] File Attachments
+- [ ] Team Invitations
+- [ ] Activity Feed Enhancements
+- [ ] AI Productivity Recommendations
 
 ---
 
-## 📜 License
+## 👨‍💻 Author
 
-MIT — built for portfolio & learning purposes.
+Built by **Sara Sharma** 
