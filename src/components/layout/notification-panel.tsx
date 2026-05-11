@@ -18,7 +18,7 @@ export function NotificationPanel() {
   const { data } = useNotifications();
   const markAllRead = useMarkAllRead();
 
-  const notifications = data?.data ?? [];
+  const notifications = data?.data?.data ?? [];
   const unreadCount = data?.unreadCount ?? 0;
 
   return (
