@@ -21,7 +21,7 @@ export default function CalendarPage() {
   const today = new Date();
   const [current, setCurrent] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const { data } = useTasks({});
-  const tasks: Task[] = data?.data ?? [];
+  const tasks: Task[] = data?.data?.data ?? [];
 
   const year = current.getFullYear();
   const month = current.getMonth();
