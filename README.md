@@ -112,6 +112,30 @@ This project is deployed using Railway with PostgreSQL integration.
 
 ---
 
+## 📝 Creating Tasks
+
+To create a new task:
+
+1. Navigate to **My Tasks** from the Workspace sidebar
+2. Click the **+ New Task** button at the top-right
+3. Select an existing project
+4. Fill in:
+   - Task title
+   - Description
+   - Priority
+   - Due date
+   - Assignee
+5. Click **Create Task**
+
+### Important Notes
+
+- A project must already exist before tasks can be created
+- Tasks are linked to projects
+- Admin accounts have full task creation access
+- Analytics and workload features become more useful after multiple tasks are created and assigned
+
+---
+
 ## 📊 Analytics & Workload Notes
 
 ### Analytics Page
